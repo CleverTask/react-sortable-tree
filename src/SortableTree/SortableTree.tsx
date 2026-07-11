@@ -245,6 +245,7 @@ function addExpandedDescendantsToDragItems<T extends TreeItem>({
 function PrivateSortableTree<T extends TreeItem = TreeItem>({
   items,
   setItems,
+  dragDisabled = false,
   isCollapsible,
   onLazyLoadChildren,
   showDropIndicator = false,
@@ -763,6 +764,7 @@ function PrivateSortableTree<T extends TreeItem = TreeItem>({
           const { id, collapsed, depth, canFetchChildren, disableDragging } = item;
           const hasChildren = (childrenCountById.get(id) ?? 0) > 0;
           const canCollapse = hasChildren || Boolean(canFetchChildren);
+          const effectiveDragDisabled = dragDisabled || Boolean(disableDragging);
 
           return (
             <SortableTreeItem<T>
@@ -770,7 +772,7 @@ function PrivateSortableTree<T extends TreeItem = TreeItem>({
               id={id}
               index={index}
               value={item}
-              disableDragging={Boolean(disableDragging)}
+              disableDragging={effectiveDragDisabled}
               depth={id === activeId && projected ? projected.depth : depth}
               indentationWidth={indentationWidth}
               indicator={showDropIndicator}

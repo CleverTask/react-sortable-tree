@@ -55,6 +55,7 @@ const App = () => {
   const [treeItems, setTreeItems] = useState<MyTreeItem>(BASE_TREE);
   const [lastMoveResult, setLastMoveResult] = useState<LastMoveResult>(null);
   const [useDragActivationConstraints, setUseDragActivationConstraints] = useState(false);
+  const [dragDisabled, setDragDisabled] = useState(false);
 
   const runProgrammaticMove = (moveFn: (items: MyTreeItem) => ProgrammaticMoveResult) => {
     setTreeItems((currentItems) => {
@@ -91,9 +92,11 @@ const App = () => {
         {...props}
         draggableItemStyle={{ background: 'violet', display: 'flex', border: '1px solid yellow' }}
       >
-        <TreeItemStructure.DragHandler>
-          <Handle />
-        </TreeItemStructure.DragHandler>
+        {props.dragDisabled ? null : (
+          <TreeItemStructure.DragHandler>
+            <Handle />
+          </TreeItemStructure.DragHandler>
+        )}
 
         <p data-tree-item-label>{props.treeItem.label}</p>
       </TreeItemStructure>
@@ -159,15 +162,33 @@ const App = () => {
           onClick={() => {
             setTreeItems(BASE_TREE);
             setLastMoveResult(null);
+            setDragDisabled(false);
           }}
         >
           Reset tree
+        </button>
+        <button
+          onClick={() =>
+            setTreeItems((items) =>
+              setTreeItemProperties(items, 'c', (item) => ({
+                disableDragging: !item.disableDragging,
+              })),
+            )
+          }
+        >
+          Toggle C drag disabled
         </button>
         <button
           onClick={() => setUseDragActivationConstraints((isEnabled) => !isEnabled)}
           aria-pressed={useDragActivationConstraints}
         >
           Toggle drag activation constraints
+        </button>
+        <button
+          onClick={() => setDragDisabled((isDisabled) => !isDisabled)}
+          aria-pressed={dragDisabled}
+        >
+          Toggle drag disabled
         </button>
       </div>
 
@@ -178,6 +199,7 @@ const App = () => {
       </pre>
 
       <SortableTree<CustomTreeItem>
+        dragDisabled={dragDisabled}
         isCollapsible
         showDropIndicator
         autoExpandOnHoverDelay={600}

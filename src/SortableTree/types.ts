@@ -114,6 +114,13 @@ export type SortableTreeDragActivationConstraints = {
  */
 export interface SortableTreeProps<T extends TreeItem = TreeItem> {
   /**
+   * Prevents every tree item from being used as a drag source.
+   * Per-item disableDragging values remain supported and are combined with this setting.
+   * @default false
+   */
+  dragDisabled?: boolean;
+
+  /**
    * A control that lets you add the indentation width for children elements
    */
   indentationWidth?: number;

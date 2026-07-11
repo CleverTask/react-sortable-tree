@@ -30,6 +30,10 @@ export interface RenderItemProps<T extends TTreeItem = TTreeItem>
       | 'disableInteraction'
       | 'collapsed'
     > {
+  /**
+   * Whether dragging is configured off for this rendered item.
+   */
+  dragDisabled: boolean;
   dragListeners?: DragHandleProps;
   treeItem: T;
   dataSlots: {
@@ -109,6 +113,7 @@ function PrivateTreeItem<T extends TTreeItem = TTreeItem>(
         paddingLeft: `${indentationWidth * depth}px`,
         ...style,
       },
+      dragDisabled: Boolean(disableDragging),
       dragListeners: handleProps,
       onCollapse,
       childCount,
