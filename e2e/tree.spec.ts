@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import {
   dragItem,
   expectItemBefore,
@@ -6,6 +6,29 @@ import {
   expectItemToBeChildOf,
   getTreeItem,
 } from './utils';
+
+async function dragTreeItemContent(page: Page, from: string, to: string) {
+  const source = getTreeItem(page, from).getByText(from, { exact: true });
+  const target = getTreeItem(page, to).locator('[data-tree-draggable]');
+  const sourceBox = await source.boundingBox();
+  const targetBox = await target.boundingBox();
+
+  if (!sourceBox || !targetBox) {
+    throw new Error('Could not determine bounds for direct tree item drag');
+  }
+
+  const startX = sourceBox.x + sourceBox.width / 2;
+  const startY = sourceBox.y + sourceBox.height / 2;
+
+  await page.mouse.move(startX, startY);
+  await page.mouse.down();
+  await page.mouse.move(startX + 8, startY + 8);
+  await page.mouse.move(targetBox.x + 8, targetBox.y + 4, { steps: 10 });
+  await page.evaluate(() => new Promise(requestAnimationFrame));
+  await page.waitForTimeout(120);
+  await page.mouse.up();
+  await page.waitForTimeout(120);
+}
 
 test('Item D becomes a child of C after drag and drop', async ({ page }) => {
   await page.goto('/');
@@ -18,6 +41,29 @@ test('Item D becomes a child of C after drag and drop', async ({ page }) => {
   });
 
   await expectItemToBeChildOf(page, expect, 'D', 'C');
+});
+
+test('Globally drag-disabled items cannot fall back to full-row dragging', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Toggle drag disabled', exact: true }).click();
+
+  await expect(page.locator('[data-tree-drag-handle][aria-label="Drag C"]')).toHaveCount(0);
+  await dragTreeItemContent(page, 'C', 'A');
+
+  await expectItemBefore(page, expect, 'B1', 'C');
+  await expectItemBefore(page, expect, 'C', 'D');
+});
+
+test('Per-item drag-disabled state is exposed to custom renderers', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Toggle C drag disabled', exact: true }).click();
+
+  await expect(page.locator('[data-tree-drag-handle][aria-label="Drag C"]')).toHaveCount(0);
+  await expect(page.locator('[data-tree-drag-handle][aria-label="Drag D"]')).toBeVisible();
+  await dragTreeItemContent(page, 'C', 'A');
+
+  await expectItemBefore(page, expect, 'B1', 'C');
+  await expectItemBefore(page, expect, 'C', 'D');
 });
 
 test('Collapsed parents auto-expand when dragging indicates nesting into them', async ({

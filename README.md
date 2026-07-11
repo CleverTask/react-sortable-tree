@@ -50,15 +50,15 @@ This is the basic structure you can start with:
 import { RenderItemProps, TreeItemStructure } from '@clevertask/react-sortable-tree';
 
 export const TreeItem = (props: RenderItemProps) => {
-  const { treeItem, collapsed, onCollapse, dragListeners } = props;
+  const { treeItem, collapsed, onCollapse, dragDisabled, dragListeners } = props;
 
   return (
     <TreeItemStructure {...props}>
       {/* TreeItemStructure.DragHandler provides a default drag handle with accessible attributes and stable selectors for E2E testing.*/}
-      <TreeItemStructure.DragHandler>Drag me</TreeItemStructure.DragHandler>
+      {dragDisabled ? null : <TreeItemStructure.DragHandler>Drag me</TreeItemStructure.DragHandler>}
 
       {/* Or if you want to implement your own approach */}
-      <button {...dragListeners}>Drag me</button>
+      {dragDisabled ? null : <button {...dragListeners}>Drag me</button>}
 
       {onCollapse && <button onClick={onCollapse}>{collapsed ? 'Expand' : 'Collapse'}</button>}
 
@@ -270,6 +270,7 @@ Internally, the tree uses the modern dnd-kit `PointerSensor`. The public option 
 | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `items`                      | `TreeItems<T>`                                                                                                                                            | Required         | The array of tree items to be rendered.                                                                                                                                           |
 | `setItems`                   | `(items: TreeItems<T>) => void`                                                                                                                           | Required         | Callback function called when the tree items array changes.                                                                                                                       |
+| `dragDisabled`               | `boolean`                                                                                                                                                 | `false`          | Prevents all tree items from being dragged. This is combined with each item's existing `disableDragging` value.                                                                   |
 | `renderItem`                 | `(props: RenderItemProps<T>) => React.ReactNode`                                                                                                          | Required         | Function to render each tree item.                                                                                                                                                |
 | `indentationWidth`           | `number`                                                                                                                                                  | `undefined`      | The indentation width for children elements.                                                                                                                                      |
 | `isCollapsible`              | `boolean`                                                                                                                                                 | `false`          | Determines if tree items can be collapsed/expanded.                                                                                                                               |
