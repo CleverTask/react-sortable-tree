@@ -9,12 +9,20 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
+
+      - name: Install Corepack and pnpm
+        run: |
+          npm install --global corepack@0.34.5
+          corepack enable
+          corepack install --global pnpm@11.17.0
+          test "$(pnpm --version)" = "11.17.0"
+
       - name: Install dependencies
-        run: npm install -g pnpm && pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Run formatting check
         run: pnpm run fmt:check

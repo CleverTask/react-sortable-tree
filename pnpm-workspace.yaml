@@ -1,4 +1,7 @@
 strictDepBuilds: true
 
+overrides:
+  '@types/node': 24.13.3
+
 allowBuilds:
   esbuild: true
