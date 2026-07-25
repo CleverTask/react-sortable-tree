@@ -590,7 +590,7 @@ function PrivateSortableTree<T extends TreeItem = TreeItem>({
           ...sourceChildren,
           ...currentDragItems.slice(activeIndex + 1),
         ];
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // oxlint-disable-next-line no-unused-vars
         const newItems = sortedItems.map(({ depth, index, ...rest }) => rest) as TreeItems<T>;
         const result = getTreeItemMoveResult(newItems, activeTreeItem.id);
 
@@ -616,7 +616,7 @@ function PrivateSortableTree<T extends TreeItem = TreeItem>({
       clonedItems[activeIndex] = { ...activeTreeItem, depth, parentId };
 
       const sortedItems = arrayMove(clonedItems, activeIndex, overIndex);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // oxlint-disable-next-line no-unused-vars
       const newItems = sortedItems.map(({ depth, index, ...rest }) => rest) as TreeItems<T>;
       const result = getTreeItemMoveResult(newItems, clonedItems[activeIndex].id);
 

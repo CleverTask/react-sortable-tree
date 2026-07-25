@@ -299,7 +299,6 @@ function flattenLegacyTree<T extends TreeItem>(
   depth = 0,
 ): FlattenedItem<T>[] {
   return items.reduce<FlattenedItem<T>[]>((acc, item, index) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { children, parentId: _ignoredParentId, ...rest } = item;
     acc.push({ ...rest, parentId, depth, index } as FlattenedItem<T>);
     acc.push(...flattenLegacyTree(children, item.id, depth + 1));
@@ -316,7 +315,7 @@ export function flattenTree<T extends TreeItem>(
 export function convertTreeToFlatItems<T extends TreeItem>(
   items: TreeItemsWithChildren<T>,
 ): TreeItems<T> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // oxlint-disable-next-line no-unused-vars
   return flattenTree(items).map(({ depth, index, ...rest }) => rest) as TreeItems<T>;
 }
 

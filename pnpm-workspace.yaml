@@ -1,7 +1,9 @@
 strictDepBuilds: true
 
-overrides:
-  '@types/node': 24.13.3
-
 allowBuilds:
   esbuild: true
+
+updateConfig:
+  # Update this manually when .nvmrc moves to the next Node LTS line.
+  ignoreDependencies:
+    - '@types/node'

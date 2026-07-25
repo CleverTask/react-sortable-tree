@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/refs, react-refresh/only-export-components */
 import React, { forwardRef, memo } from 'react';
 import type { ForwardedRef, HTMLAttributes, ReactElement, RefAttributes } from 'react';
 import styles from './TreeItem.module.css';
