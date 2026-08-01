@@ -27,9 +27,12 @@
   },
   "scripts": {
     "dev": "vite",
-    "e2e": "playwright test",
-    "e2e:dev": "playwright test --ui",
+    "e2e": "pnpm run e2e:prepare && playwright test && pnpm run e2e:build-consumer",
+    "e2e:build-consumer": "pnpm --dir e2e/consumer exec vite build",
+    "e2e:dev": "pnpm run e2e:prepare && playwright test --ui",
     "e2e:install": "playwright install --with-deps",
+    "e2e:prepare": "pnpm run build && node scripts/prepare-package-consumer.mjs",
+    "e2e:serve": "pnpm --dir e2e/consumer exec vite --force --strictPort --host 127.0.0.1 --port 5174",
     "build": "rm -rf dist && vite build && vite build -c vite.test.config.ts && tsc -p tsconfig.types.json --noCheck",
     "lint": "oxlint .",
     "format": "oxfmt",
@@ -38,7 +41,7 @@
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
     "prepare": "husky",
-    "validate:deps": "pnpm run fmt:check && pnpm run lint && pnpm run build && pnpm run e2e:install && pnpm run e2e"
+    "validate:deps": "pnpm run fmt:check && pnpm run lint && pnpm run e2e:install && pnpm run e2e"
   },
   "dependencies": {
     "@dnd-kit/abstract": "0.5.0",
