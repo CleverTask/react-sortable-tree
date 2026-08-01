@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 import {
   dragItem,
   expectItemBefore,
@@ -29,6 +29,12 @@ async function dragTreeItemContent(page: Page, from: string, to: string) {
   await page.mouse.up();
   await page.waitForTimeout(120);
 }
+
+test('Packed tree loads without browser errors', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(getTreeItem(page, 'A')).toBeVisible();
+});
 
 test('Item D becomes a child of C after drag and drop', async ({ page }) => {
   await page.goto('/');

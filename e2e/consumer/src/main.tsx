@@ -1,6 +1,5 @@
 import { createRoot } from 'react-dom/client';
 import { StrictMode, useState } from 'react';
-import { Handle } from './SortableTree/components/Handle';
 import {
   createSortableTreeGlobalStyles,
   moveItemAfter,
@@ -13,18 +12,15 @@ import {
   removeItemsById,
   setTreeItemProperties,
   SortableTree,
-  TreeItem,
-  TreeItems,
   TreeItemStructure,
-} from './index';
-import { RenderItemProps } from './SortableTree/components/TreeItem/TreeItem';
-import type {
-  DropResult,
-  MoveTreeItemResult,
-  MoveTreeItemsResult,
-  SortableTreeDragActivationConstraints,
-} from './index';
-
+  type DropResult,
+  type MoveTreeItemResult,
+  type MoveTreeItemsResult,
+  type RenderItemProps,
+  type SortableTreeDragActivationConstraints,
+  type TreeItem,
+  type TreeItems,
+} from '@clevertask/react-sortable-tree';
 type CustomTreeItem = TreeItem<{
   icon?: string;
   description?: string;
@@ -50,6 +46,18 @@ const DEMO_DRAG_ACTIVATION_CONSTRAINTS = {
   touch: { delay: 220, tolerance: 8 },
   pen: { distance: 6 },
 } satisfies SortableTreeDragActivationConstraints;
+
+const renderConsumerDragHandle = () => (
+  <svg
+    aria-hidden="true"
+    focusable="false"
+    style={{ fill: '#919eab', flex: '0 0 auto', margin: 'auto', overflow: 'visible' }}
+    viewBox="0 0 20 20"
+    width="12"
+  >
+    <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z" />
+  </svg>
+);
 
 const App = () => {
   const [treeItems, setTreeItems] = useState<MyTreeItem>(BASE_TREE);
@@ -93,8 +101,21 @@ const App = () => {
         draggableItemStyle={{ background: 'violet', display: 'flex', border: '1px solid yellow' }}
       >
         {props.dragDisabled ? null : (
-          <TreeItemStructure.DragHandler>
-            <Handle />
+          <TreeItemStructure.DragHandler
+            as="button"
+            style={{
+              appearance: 'none',
+              background: 'transparent',
+              border: 0,
+              cursor: 'grab',
+              display: 'flex',
+              flex: '0 0 auto',
+              padding: 15,
+              touchAction: 'none',
+              width: 12,
+            }}
+          >
+            {renderConsumerDragHandle()}
           </TreeItemStructure.DragHandler>
         )}
 
