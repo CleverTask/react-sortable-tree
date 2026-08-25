@@ -91,6 +91,7 @@ function PrivateTreeItem<T extends TTreeItem = TTreeItem>(
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   return renderItem ? (
+    // oxlint-disable-next-line react/refs -- The public renderItem API delegates attaching this opaque ref to its consumer.
     renderItem({
       dropZoneRef: wrapperRef,
       draggableItemRef: ref,
